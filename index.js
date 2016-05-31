@@ -92,10 +92,14 @@ function convertSvgData(opts) {
         k++;
         
         //删除多余文件
-        fs.exists(path.join(opts.outPath,key), function (exists) {
-          if(exists){fs.rmdir(path.join(opts.outPath,key))}
-        });
-
+        //fs.exists(path.join(opts.outPath,key), function (exists) {
+        //  if(exists){fs.rmdir(path.join(opts.outPath,key))}
+        //});
+		
+        //同步处理
+         if (fs.existsSync(path.join(opts.outPath,key))){
+          fs.rmdirSync(path.join(opts.outPath,key))
+         }
       }
       fs.exists(path.join(opts.outPath,"svg-symbols.css"), function(exists) { 
          if(exists){fs.unlinkSync(path.join(opts.outPath,"svg-symbols.css"))}
