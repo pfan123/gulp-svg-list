@@ -5,6 +5,8 @@ var path = require("path");
 var cheerio = require('cheerio')
 var gutil = require('gulp-util');
 var CleanCSS = require('clean-css');
+var CleanCSS = require('clean-css');
+var minify = require('html-minifier').minify;
 
 /**
  * [writeToFile 写入文件]
@@ -106,6 +108,13 @@ function convertSvgData(opts) {
       var $$ = cheerio.load(symbol.toString("utf-8"));
       var html = '<svg xmlns="http://www.w3.org/2000/svg" style="display:none">'+$$("svg").html()+'</svg>';
       fs.writeFileSync(path.join(opts.outPath,"svg-symbols.svg"),html);
+
+      var result = minify(html,{collapseWhitespace:true});
+
+      var js = "var symbols = '"+result+"';\n document.body.insertAdjacentHTML('afterBegin',symbols)"
+      console.log(result)
+      fs.writeFileSync(path.join(opts.outPath,"svg-symbols.js"),js);
+
 
       var css = fs.readFileSync(path.join(opts.outPath,"svg-symbols.css")).toString("utf-8");
       var minified = new CleanCSS().minify(css).styles;
