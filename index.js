@@ -5,7 +5,6 @@ var path = require("path");
 var cheerio = require('cheerio')
 var gutil = require('gulp-util');
 var CleanCSS = require('clean-css');
-var CleanCSS = require('clean-css');
 var minify = require('html-minifier').minify;
 
 /**
