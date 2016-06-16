@@ -112,7 +112,7 @@ function convertSvgData(opts) {
       var result = minify(html,{collapseWhitespace:true});
 
       var js = "var symbols = '"+result+"';\n document.body.insertAdjacentHTML('afterBegin',symbols)"
-      console.log(result)
+
       fs.writeFileSync(path.join(opts.outPath,"svg-symbols.js"),js);
 
 
