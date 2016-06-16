@@ -123,7 +123,8 @@ function convertSvgData(opts) {
                 code = code.replace(/(\*\/)/ig, '$1\n');
                 return code;
       } 
-      fs.writeFileSync(path.join(opts.outPath,"svg-symbols.css"),multiline(minified));
+      // fs.writeFileSync(path.join(opts.outPath,"svg-symbols.css"),multiline(minified));
+      fs.writeFileSync(path.join(opts.outPath,"svg-symbols.css"),".cls-1{fill:#fff;fill-rule:evenodd}");
 
       // fs.exists(path.join(opts.outPath,"svg-symbols.css"), function(exists) { 
       //    if(exists){fs.unlinkSync(path.join(opts.outPath,"svg-symbols.css"))}
