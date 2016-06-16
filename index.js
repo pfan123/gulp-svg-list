@@ -4,6 +4,7 @@ var fs = require('fs');
 var path = require("path");
 var cheerio = require('cheerio')
 var gutil = require('gulp-util');
+var CleanCSS = require('clean-css');
 
 /**
  * [writeToFile 写入文件]
@@ -92,18 +93,33 @@ function convertSvgData(opts) {
         k++;
         
         //删除多余文件
-        //fs.exists(path.join(opts.outPath,key), function (exists) {
-        //  if(exists){fs.rmdir(path.join(opts.outPath,key))}
-        //});
-		
+        // fs.exists(path.join(opts.outPath,key), function (exists) {
+        //   if(exists){fs.rmdir(path.join(opts.outPath,key))}
+        // });
+        
         //同步处理
          if (fs.existsSync(path.join(opts.outPath,key))){
           fs.rmdirSync(path.join(opts.outPath,key))
          }
       }
-      fs.exists(path.join(opts.outPath,"svg-symbols.css"), function(exists) { 
-         if(exists){fs.unlinkSync(path.join(opts.outPath,"svg-symbols.css"))}
-      });
+      var symbol = fs.readFileSync(path.join(opts.outPath,"svg-symbols.svg")).toString("utf-8");
+      var $$ = cheerio.load(symbol.toString("utf-8"));
+      var html = '<svg xmlns="http://www.w3.org/2000/svg" style="display:none">'+$$("svg").html()+'</svg>';
+      fs.writeFileSync(path.join(opts.outPath,"svg-symbols.svg"),html);
+
+      var css = fs.readFileSync(path.join(opts.outPath,"svg-symbols.css")).toString("utf-8");
+      var minified = new CleanCSS().minify(css).styles;
+
+      function multiline(code){
+                code = code.replace(/(\})/ig, '$1\n\n');
+                code = code.replace(/(\*\/)/ig, '$1\n');
+                return code;
+      } 
+      fs.writeFileSync(path.join(opts.outPath,"svg-symbols.css"),multiline(minified));
+
+      // fs.exists(path.join(opts.outPath,"svg-symbols.css"), function(exists) { 
+      //    if(exists){fs.unlinkSync(path.join(opts.outPath,"svg-symbols.css"))}
+      // });
       if(k === 1){
            for(var key in fileList){
             fileList = fileList[key]
